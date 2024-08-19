@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emociones</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #emotion-img {
+            width: 90%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <img id="emotion-img" src="static/images/neutral.png" alt="Emocion">
+
+    <script>
+        // Conectar al servidor WebSocket local
+        var socket = new WebSocket('ws://localhost:8080');
+
+        socket.onopen = function() {
+            console.log('Conectado al servidor WebSocket');
+        };
+
+        socket.onmessage = function(event) {
+            var data = event.data;
+            var parts = data.trim().split('#');
+
+            if (parts.length === 4) {
+                var destino = parts[1];
+                var topico = parts[2];
+                var parametro = parts[3].replace('%', '');
+
+                if (destino.toLowerCase() === 'android' && topico.toLowerCase() === 'gestos') {
+                    var imgPath = 'static/images/' + parametro.toLowerCase() + '.png';
+                    document.getElementById('emotion-img').src = imgPath;
+                }
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.log('Error: ' + error.message);
+        };
+
+        socket.onclose = function() {
+            console.log('Conexión cerrada');
+        };
+    </script>
+</body>
+</html>
