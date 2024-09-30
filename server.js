@@ -28,10 +28,10 @@ wss.on('connection', function connection(ws) {
         });
     });
 
-    ws.send('Conectado al servidor WebSocket');
+    ws.send('Conectado al servidor IoRT');
 });
 
 // Inicia el servidor en el puerto 8080
-server.listen(8080, () => {
-    console.log('Servidor escuchando en http://localhost:8080');
+server.listen(8080, '0.0.0.0', () => {
+    console.log('Servidor escuchando en http://192.168.1.114:8080');
 });

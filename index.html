@@ -14,7 +14,7 @@
             background-color: #f0f0f0;
         }
         #emotion-img {
-            width: 90%;
+            width: 80%;
             height: auto;
         }
     </style>
@@ -24,25 +24,49 @@
 
     <script>
         // Conectar al servidor WebSocket local
-        var socket = new WebSocket('ws://localhost:8080');
+        var socket = new WebSocket('ws://192.168.1.114:8080');
 
         socket.onopen = function() {
-            console.log('Conectado al servidor WebSocket');
+            console.log('Conectado al servidor IoRT');
         };
 
         socket.onmessage = function(event) {
-            var data = event.data;
-            var parts = data.trim().split('#');
+            let data = event.data;
 
-            if (parts.length === 4) {
-                var destino = parts[1];
-                var topico = parts[2];
-                var parametro = parts[3].replace('%', '');
+            // Si el mensaje es un Buffer o un ArrayBuffer, conviértelo a string
+            if (data instanceof ArrayBuffer || data instanceof Blob) {
+                let reader = new FileReader();
+                reader.onload = function() {
+                    var message = reader.result;
+                    console.log("Mensaje recibido 1:", message.trim());
+                    
+                    var parts = message.trim().split('#');
+                    console.log(parts);
 
-                if (destino.toLowerCase() === 'android' && topico.toLowerCase() === 'gestos') {
-                    var imgPath = 'static/images/' + parametro.toLowerCase() + '.png';
-                    document.getElementById('emotion-img').src = imgPath;
-                }
+                    if (parts.length === 6) {
+                        var cliente = parts[0];
+                        var destino = parts[1];
+                        var tipo_sistema = parts[2];
+                        var tipo_mensaje = parts[3];
+                        var topico = parts[4]
+                        var parametro = parts[5].replace('%', '');
+                        console.log("Parámetro: ", parametro)
+
+                        if (destino.toLowerCase() === 'android') {
+                            if(topico.toLowerCase() === 'gestos') {
+                                var imgPath = 'static/images/' + parametro.toLowerCase() + '.png';
+                                document.getElementById('emotion-img').src = imgPath;
+                            }
+                        }
+                    }
+
+                };
+                reader.readAsText(data);  // Convierte a texto
+            } else if (typeof data === "string") {
+                message = data;
+                console.log("Mensaje recibido 2:", data.trim());
+            } else {
+                console.error("Tipo de datos no manejado:", data);
             }
         };
 
