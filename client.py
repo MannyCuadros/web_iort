@@ -2,7 +2,11 @@ import asyncio
 import websockets
 
 #ip = "127.0.0.1"
-ip = "192.168.1.114"
+#ip = "192.168.1.114"
+#Lan Alice
+#ip = "192.168.99.196"
+#Lan Pepper
+ip = "192.168.31.9"
 #puerto = 5000
 puerto = 8080
 
