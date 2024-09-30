@@ -33,5 +33,8 @@ wss.on('connection', function connection(ws) {
 
 // Inicia el servidor en el puerto 8080
 server.listen(8080, '0.0.0.0', () => {
-    console.log('Servidor escuchando en http://192.168.1.114:8080');
+    //Lan Alice
+    //console.log('Servidor escuchando en http://192.168.99.196:8080');
+    //Lan Pepper
+    console.log('Servidor escuchando en http://192.168.31.9:8080');
 });
